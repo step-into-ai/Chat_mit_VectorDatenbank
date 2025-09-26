@@ -17,6 +17,20 @@ npm install
 npm run dev
 ```
 
+
+## Deployment auf GitHub Pages
+
+1. Baue das Projekt lokal:
+
+   ```bash
+   npm run build
+   ```
+
+2. Lade den Inhalt des generierten `dist/`-Ordners nach `gh-pages` oder den für GitHub Pages konfigurierten Branch hoch.
+
+Die App nutzt einen Hash-Router und relative Asset-Pfade, sodass sie ohne zusätzliche Server-Konfiguration auf GitHub Pages funktioniert.
+
+
 Die Anwendung läuft anschließend auf [http://localhost:5173](http://localhost:5173).
 
 Für ein Produktionsbuild:
