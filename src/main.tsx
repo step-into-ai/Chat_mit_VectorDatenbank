@@ -2,6 +2,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { ColorModeProvider } from './theme/ColorModeContext';
 import { themeBuilder } from './theme/themeBuilder';
@@ -24,6 +25,9 @@ root.render(
           <HashRouter>
             <App />
           </HashRouter>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
         </ThemeProvider>
       )}
     </ColorModeProvider>
