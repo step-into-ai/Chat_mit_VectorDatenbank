@@ -24,7 +24,7 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({ open
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>
         Vorschau
-        <IconButton onClick={onClose} sx={{ position: 'absolute', right: 8, top: 8 }} aria-label="schließen">
+        <IconButton onClick={onClose} sx={{ position: 'absolute', right: 8, top: 8 }} aria-label="schliessen">
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -35,7 +35,7 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({ open
       <DialogContent>
         {!file ? (
           <Typography variant="body2" color="text.secondary">
-            Wähle ein Dokument aus, um eine Vorschau anzuzeigen.
+            Waehle ein Dokument aus, um eine Vorschau anzuzeigen.
           </Typography>
         ) : tab === 'details' ? (
           <Box display="grid" gap={1}>
@@ -44,7 +44,7 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({ open
               Typ: {file.type || 'Unbekannt'}
             </Typography>
             <Typography variant="subtitle2" color="text.secondary">
-              Größe: {(file.size / 1024).toFixed(1)} kB
+              Groesse: {(file.size / 1024).toFixed(1)} kB
             </Typography>
           </Box>
         ) : file.type.startsWith('text/') ? (
@@ -53,7 +53,7 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({ open
           </Box>
         ) : (
           <Typography variant="body2" color="text.secondary">
-            Eine Vorschau für diesen Dateityp wird nicht unterstützt.
+            Eine Vorschau fuer diesen Dateityp wird nicht unterstuetzt.
           </Typography>
         )}
       </DialogContent>

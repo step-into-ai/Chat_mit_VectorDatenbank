@@ -1,127 +1,142 @@
-import AutoAwesomeMotionOutlinedIcon from '@mui/icons-material/AutoAwesomeMotionOutlined';
-import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
-import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
-import { Alert, Card, CardContent, CardHeader, Divider, LinearProgress, Stack, Switch, Typography } from '@mui/material';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
+import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
+import { Alert, Box, Card, CardContent, Divider, LinearProgress, Stack, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
-import React, { useState } from 'react';
-import { ChatResponse, ChatSourceReference, sendChatMessage } from '../api/chat';
+import React from 'react';
+import { ChatResponse, sendChatMessage } from '../api/chat';
 import { ChatComposer } from '../components/chat/ChatComposer';
 import { MessageBubble } from '../components/chat/MessageBubble';
-import { SourcePreview } from '../components/chat/SourcePreview';
-import { useActiveProfile } from '../store/useSettingsStore';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useSettingsStore } from '../store/useSettingsStore';
 
 interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
-  sources?: ChatSourceReference[];
 }
 
 export const ChatPage: React.FC = () => {
-  const activeProfile = useActiveProfile();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [selectedSource, setSelectedSource] = useState<ChatSourceReference | undefined>();
-  const [showSources, setShowSources] = useState(true);
+  const chatWebhookUrl = useSettingsStore((state) => state.chatWebhookUrl);
+  const [messages, setMessages] = useLocalStorage<ChatMessage[]>('vector-chat-history', []);
 
   const mutation = useMutation({
     mutationFn: async (prompt: string) => {
-      if (!activeProfile?.chatUrl) {
-        throw new Error('Bitte hinterlege zuerst einen Chat Webhook in den Einstellungen.');
+      if (!chatWebhookUrl) {
+        throw new Error('Bitte hinterlege zuerst einen Chat-Webhook in den Einstellungen.');
       }
-      const response = await sendChatMessage(activeProfile.chatUrl, { message: prompt });
+      const response = await sendChatMessage(chatWebhookUrl, { message: prompt });
       return response satisfies ChatResponse ? response : (response as ChatResponse);
     },
     onSuccess: (response) => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: response.id,
-          role: 'assistant',
-          content: response.answer,
-          sources: response.sources
-        }
-      ]);
+      const assistantMessage: ChatMessage = {
+        id: response.id,
+        role: 'assistant',
+        content: response.answer
+      };
+
+      setMessages((prev) => [...prev, assistantMessage].slice(-50));
     }
   });
 
   const handleSend = (prompt: string) => {
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        role: 'user',
-        content: prompt
-      }
-    ]);
+    const userMessage: ChatMessage = {
+      id: crypto.randomUUID(),
+      role: 'user',
+      content: prompt
+    };
+
+    setMessages((prev) => [...prev, userMessage].slice(-50));
     mutation.mutate(prompt);
   };
 
+  const conversationEmpty = messages.length === 0;
+  const composerDisabled = !chatWebhookUrl || mutation.isPending;
+
   return (
-    <Stack spacing={4} id="chat-section">
-      <Stack spacing={1}>
-        <Typography variant="h4">Chat mit Kontext</Typography>
+    <Stack spacing={5} sx={{ height: '100%' }} alignItems="center" textAlign="center">
+      <Stack spacing={1.5} maxWidth={720} alignItems="center">
+        <Typography variant="overline" color="primary" sx={{ fontWeight: 600 }}>
+          Chat Workspace
+        </Typography>
+        <Typography variant="h3" sx={{ fontWeight: 800, letterSpacing: '-0.01em' }}>
+          Chatte mit deinen Dokumenten
+        </Typography>
         <Typography variant="body1" color="text.secondary">
-          Frage deinen Agenten nach Erkenntnissen aus Pinecone. Wir zeigen die relevanten Dokumentstellen direkt mit an.
+          Stelle Fragen in Alltagssprache. Dein n8n-Agent zieht automatisch den passenden Kontext aus deiner Vector-Datenbank und liefert dir eine klare Antwort.
         </Typography>
       </Stack>
 
-      <Card elevation={0} sx={{ borderRadius: 4, border: '1px solid', borderColor: 'divider' }}>
-        <CardHeader
-          title="Konversation"
-          subheader={activeProfile?.chatUrl ? `Webhook: ${activeProfile.chatUrl}` : 'Verbinde zuerst einen Chat Webhook.'}
-          action={
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Typography variant="body2">Quellen anzeigen</Typography>
-              <Switch checked={showSources} onChange={(event) => setShowSources(event.target.checked)} />
-            </Stack>
-          }
-        />
-        <Divider />
+      <Card
+        elevation={0}
+        sx={{
+          borderRadius: 5,
+          border: '1px solid',
+          borderColor: 'divider',
+          width: '100%',
+          maxWidth: 860,
+          textAlign: 'left'
+        }}
+      >
         <CardContent>
-          <Stack spacing={3} sx={{ minHeight: 320 }}>
-            {messages.length === 0 && (
-              <Alert severity="info" icon={<LightbulbOutlinedIcon />}>
-                Tipp: Lass dir zusammenfassungen aus Pinecone geben oder frage nach konkreten Stellen.
-              </Alert>
-            )}
-            {mutation.isPending && <LinearProgress />}
-            {messages.map((message) => (
-              <MessageBubble
-                key={message.id}
-                variant={message.role}
-                message={message.content}
-                sources={showSources ? message.sources : undefined}
-                onSourceClick={setSelectedSource}
-              />
-            ))}
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'flex-start', sm: 'center' }}>
+            <Box
+              sx={{
+                backgroundColor: 'primary.light',
+                color: 'primary.contrastText',
+                width: 48,
+                height: 48,
+                borderRadius: '16px',
+                display: 'grid',
+                placeItems: 'center'
+              }}
+            >
+              <QuestionAnswerOutlinedIcon />
+            </Box>
+            <Stack spacing={0.5}>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                Dein persönlicher Dokumenten-Chat
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {chatWebhookUrl
+                  ? 'Webhook verbunden – Antworten kommen direkt von deinem Agenten.'
+                  : 'Aktiviere deinen Chat-Webhook in den Einstellungen, um Antworten zu erhalten.'}
+              </Typography>
+            </Stack>
           </Stack>
         </CardContent>
+
         <Divider />
+
+        <CardContent sx={{ minHeight: 320 }}>
+          <Stack spacing={3}>
+            {conversationEmpty && (
+              <Alert severity="info" icon={<AutoAwesomeOutlinedIcon />}>
+                Starte mit einer Frage wie „Was steht in meinem Projektplan?“ oder bitte um eine Zusammenfassung deiner neuesten Datei.
+              </Alert>
+            )}
+            {messages.map((message) => (
+              <MessageBubble key={message.id} variant={message.role} message={message.content} />
+            ))}
+            {mutation.isPending && <LinearProgress />}
+          </Stack>
+        </CardContent>
+
+        <Divider />
+
         <CardContent>
-          <ChatComposer onSend={handleSend} disabled={mutation.isPending} />
+          <ChatComposer onSend={handleSend} disabled={composerDisabled} />
           {mutation.isError && (
             <Alert severity="error" sx={{ mt: 2 }}>
               {(mutation.error as Error).message}
             </Alert>
           )}
+          {!chatWebhookUrl && !mutation.isError && (
+            <Alert severity="warning" sx={{ mt: 2 }}>
+              Hinterlege deinen Chat-Webhook in den Einstellungen, um Antworten abzurufen.
+            </Alert>
+          )}
         </CardContent>
       </Card>
-
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>
-        <Alert
-          icon={<AutoAwesomeMotionOutlinedIcon />}
-          severity="success"
-          variant="outlined"
-          sx={{ flex: 1 }}
-        >
-          VectorChat merkt sich deine letzte Konversation und sendet automatisch die relevante History mit.
-        </Alert>
-        <Alert icon={<FlagOutlinedIcon />} severity="info" variant="outlined" sx={{ flex: 1 }}>
-          Nutze Tags aus dem Datenbank Tab, um deine Antworten präziser zu machen.
-        </Alert>
-      </Stack>
-
-      <SourcePreview open={Boolean(selectedSource)} source={selectedSource} onClose={() => setSelectedSource(undefined)} />
     </Stack>
   );
 };

@@ -1,12 +1,6 @@
 export interface UploadJobPayload {
   files: Array<{ name: string; content: string; type: string }>;
-  metadata: {
-    shouldUpdate: boolean;
-    tags?: string[];
-    title?: string;
-    notes?: string;
-    temperature?: number;
-  };
+  metadata?: Record<string, unknown>;
 }
 
 export interface UploadResponse {
@@ -31,7 +25,7 @@ export const sendUploadPayload = async (webhookUrl: string, payload: UploadJobPa
   });
 
   if (!response.ok) {
-    throw new Error('Upload konnte nicht ausgelöst werden.');
+    throw new Error('Upload konnte nicht ausgeloest werden.');
   }
 
   return response.json();
@@ -46,3 +40,4 @@ export const fetchIngestionStatus = async (
   }
   return response.json();
 };
+

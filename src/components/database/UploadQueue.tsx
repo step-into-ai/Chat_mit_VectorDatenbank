@@ -78,7 +78,7 @@ export const UploadQueue: React.FC<UploadQueueProps> = ({ statusUrl, jobIds }) =
 
       {!query.data?.length && !query.isLoading && (
         <Alert severity="info" variant="outlined">
-          Es liegen noch keine Statusinformationen vor. Prüfe in einigen Minuten erneut.
+          Es liegen noch keine Statusinformationen vor. Pruefe in einigen Minuten erneut.
         </Alert>
       )}
     </Stack>

@@ -27,7 +27,7 @@ export const ChatComposer: React.FC<ChatComposerProps> = ({ onSend, disabled }) 
           minRows={2}
           maxRows={6}
           label="Deine Frage"
-          placeholder="Frag den VectorChat Agent …"
+          placeholder="Frag den VectorChat Agent nach deinen Dokumenten"
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           fullWidth

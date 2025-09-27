@@ -1,8 +1,7 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { HashRouter } from 'react-router-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
 import App from './App';
 import { ColorModeProvider } from './theme/ColorModeContext';
 import { themeBuilder } from './theme/themeBuilder';
@@ -14,6 +13,14 @@ if (!container) {
   throw new Error('Root element not found');
 }
 
+const AppRouter = ({ children }: { children: React.ReactNode }) => {
+  if (import.meta.env.MODE === 'production') {
+    return <HashRouter>{children}</HashRouter>;
+  }
+
+  return <BrowserRouter>{children}</BrowserRouter>;
+};
+
 const root = ReactDOM.createRoot(container);
 
 root.render(
@@ -22,12 +29,9 @@ root.render(
       {({ theme }) => (
         <ThemeProvider theme={themeBuilder(theme)}>
           <CssBaseline />
-          <HashRouter>
+          <AppRouter>
             <App />
-          </HashRouter>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          </AppRouter>
         </ThemeProvider>
       )}
     </ColorModeProvider>
