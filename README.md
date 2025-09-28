@@ -1,50 +1,39 @@
-# Chat mit Vector Datenbank – VectorChat Studio
+# Chat mit Vector Datenbank - VectorChat Studio
 
-Eine moderne React-Anwendung für den Upload von Dokumenten, das Management deiner n8n Webhook-Profile und einen KI-gestützten Chat, der auf einer Pinecone Vektordatenbank basiert.
+Eine moderne React-Anwendung, mit der du Dokumente hochlaedst, n8n-Webhooks verwaltest und ueber einen KI-gestuetzten Chat auf deinen Vector-Speicher zugreifst.
 
 ## Features
 
-- **Datenbank Tab**: Lade PDFs, Texte oder strukturierte Daten hoch, vergib Tags und steuere über einen eleganten Regler, ob dein Index aktualisiert wird.
-- **Upload Monitoring**: Verfolge den Status deiner Ingestion-Jobs mit einer Live-Fortschrittsanzeige.
-- **Chat Tab**: Unterhalte dich mit deinem Agenten, inklusive Quellen-Hinweisen aus Pinecone und einem Toggle für Quellen.
-- **Einstellungen**: Verwalte mehrere Webhook-Profile, speichere sie dauerhaft im Local Storage und starte eine Onboarding-Tour neu.
-- **Onboarding & Theme**: Automatische Guided Tour beim Erststart sowie Dark-/Light-Mode.
+- Dokument-Flow: PDFs, Notizen oder CSVs hochladen und direkt an deinen n8n-Flow weiterleiten.
+- Upload-Feedback: Dateiliste, Statusmeldungen und Base64-Uebertragung ohne komplizierte Formulare.
+- Chat Workspace: Fragen in Alltagssprache stellen - Antworten kommen aus deinem Vector-Kontext.
+- Einstellungen: Webhooks zentral pflegen, lokal speichern und bei Bedarf zuruecksetzen.
+- Theme & Onboarding: Moderne UI mit Light/Dark-Mode und optionaler Guided Tour.
 
 ## Entwicklung
 
-```bash
-npm install
-npm run dev
-```
+Lokal installieren und starten:
+- npm install
+- npm run dev
 
+Die Anwendung laeuft anschliessend auf http://localhost:5173.
+
+Fuer ein Produktions-Build: npm run build
 
 ## Deployment auf GitHub Pages
 
-1. Baue das Projekt lokal:
+1. npm run build:docs (erstellt docs/ plus .nojekyll)
+2. docs/ committen und auf main pushen
+3. In den Pages-Einstellungen Branch: main und Ordner: /docs setzen
 
-   ```bash
-   npm run build
-   ```
-
-2. Lade den Inhalt des generierten `dist/`-Ordners nach `gh-pages` oder den für GitHub Pages konfigurierten Branch hoch.
-
-Die App nutzt einen Hash-Router und relative Asset-Pfade, sodass sie ohne zusätzliche Server-Konfiguration auf GitHub Pages funktioniert.
-
-
-Die Anwendung läuft anschließend auf [http://localhost:5173](http://localhost:5173).
-
-Für ein Produktionsbuild:
-
-```bash
-npm run build
-```
+Nach jedem Update wiederholst du Schritt 1 und 2; GitHub Pages zieht sich dann automatisch die gebauten Assets.
 
 ## Struktur
 
-- `src/pages` – Seiten für Datenbank, Chat und Einstellungen.
-- `src/components` – Wiederverwendbare UI-Bausteine (Upload, Chat, Settings, Onboarding).
-- `src/store` – Persistente Einstellungen (Zustand Store).
-- `src/api` – Webhook-Clients für Uploads und Chat.
-- `src/theme` – Material UI Theme mit Blautönen und Dark Mode.
+- src/pages - Seiten fuer Datenbank, Chat und Einstellungen
+- src/components - Wiederverwendbare UI-Bausteine
+- src/store - Persistente Einstellungen (Zustand Store)
+- src/api - Webhook-Clients fuer Uploads und Chat
+- src/theme - Material-UI-Theme mit VectorChat-Farben
 
-Viel Spaß beim Chatten mit deinen eigenen Daten! 💙
+Viel Spass beim Chatten mit deinen eigenen Daten!

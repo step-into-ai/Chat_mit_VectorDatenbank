@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "npm run typecheck && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx"
+    "lint": "eslint . --ext ts,tsx",
+    "typecheck": "tsc --noEmit",
+    "build:docs": "npm run typecheck && vite build --outDir docs && node scripts/prepareDocs.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
