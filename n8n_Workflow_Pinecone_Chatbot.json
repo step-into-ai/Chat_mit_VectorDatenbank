@@ -23,9 +23,9 @@
         "mode": "insert",
         "pineconeIndex": {
           "__rl": true,
-          "value": "n8ntest",
+          "value": "githubapp",
           "mode": "list",
-          "cachedResultName": "n8ntest"
+          "cachedResultName": "githubapp"
         },
         "options": {}
       },
@@ -53,7 +53,7 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        240,
+        192,
         192
       ],
       "id": "61c91a63-278b-4f6f-8362-b4a8282812ef",
@@ -72,7 +72,7 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        448,
+        416,
         192
       ],
       "id": "c9d4f16f-3dbe-427e-8a9f-84583ab682b1",
@@ -112,7 +112,9 @@
       "parameters": {
         "promptType": "define",
         "text": "={{ $json.body.message }}",
-        "options": {}
+        "options": {
+          "systemMessage": "Du bist ein Agent der mit einer Datenbankl verbunden ist. Bitte verwende diese immer, das Tool was du benutzen sollst heißt:\nPinecone Vector Store1"
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
@@ -180,16 +182,17 @@
         "toolDescription": "Nutze diese Datenbank für jede Anfrage",
         "pineconeIndex": {
           "__rl": true,
+          "value": "githubapp",
           "mode": "list",
-          "value": ""
+          "cachedResultName": "githubapp"
         },
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
       "typeVersion": 1.3,
       "position": [
-        512,
-        720
+        528,
+        704
       ],
       "id": "bcde337b-a18f-4e24-804f-3760afe3ec6d",
       "name": "Pinecone Vector Store1",
@@ -337,7 +340,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "39c67004-4b32-4bb7-bae1-28ff27c7cf1a",
+  "versionId": "26b10a56-5dd1-4659-8bcd-5f13b637497d",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "cb1634809689147b9e471b6060504b77ec3b0c47e59f5ae02e208c1700842c3a"
